@@ -8,25 +8,25 @@ pipeline {
     }
 
     stages {
-        stage("Workspace cleanup"){
-            steps{
+        stage ("Workspace cleanup"){
+            steps {
                 script{
                     cleanWs()
                 }
             }
         }
         
-        stage('Git: Code Checkout') {
+        stage ('Git: Code Checkout') {
             steps {
-                script{
+                script {
                     code_checkout("https://github.com/LondheShubham153/Wanderlust-Mega-Project.git","main")
                 }
             }
         }
         
-        stage('Verify: Docker Image Tags') {
+        stage ('Verify: Docker Image Tags') {
             steps {
-                script{
+                script {
                     echo "FRONTEND_DOCKER_TAG: ${params.FRONTEND_DOCKER_TAG}"
                     echo "BACKEND_DOCKER_TAG: ${params.BACKEND_DOCKER_TAG}"
                 }
@@ -34,9 +34,9 @@ pipeline {
         }
         
         
-        stage("Update: Kubernetes manifests"){
-            steps{
-                script{
+        stage ("Update: Kubernetes manifests"){
+            steps {
+                script {
                     dir('kubernetes'){
                         sh """
                             sed -i -e s/wanderlust-backend-beta.*/wanderlust-backend-beta:${params.BACKEND_DOCKER_TAG}/g backend.yaml
@@ -53,9 +53,9 @@ pipeline {
             }
         }
         
-        stage("Git: Code update and push to GitHub"){
-            steps{
-                script{
+        stage ("Git: Code update and push to GitHub"){
+            steps {
+                script {
                     withCredentials([gitUsernamePassword(credentialsId: 'Github-cred', gitToolName: 'Default')]) {
                         sh '''
                         echo "Checking repository status: "
